@@ -10,9 +10,9 @@ from PIL import Image
 import os
 
 #Hyperparameters
-num_epochs = 10
+num_epochs = 30
 batch_size = 64
-learning_rate = 0.001
+learning_rate = 1e-05
 input_shape = (224, 224, 3)
 num_classes = 1000
 
