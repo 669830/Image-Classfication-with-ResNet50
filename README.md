@@ -1,5 +1,5 @@
 # Image-Classfication-with-ResNet50
-Description
+# Description
 This project focuses on building an image classification model using transfer learning with ResNet50. We fine-tune a pretrained ResNet50 on a reduced version of the ImageNet dataset, which contains 1000 classes. The model is evaluated using top-1 accuracy and loss.
 
 Dataset
