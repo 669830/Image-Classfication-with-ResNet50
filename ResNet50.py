@@ -9,16 +9,19 @@ import numpy as np
 from PIL import Image
 import os
 
+#Hyperparameters
 num_epochs = 10
 batch_size = 64
 learning_rate = 0.001
 input_shape = (224, 224, 3)
 num_classes = 1000
 
+#Load a subset of the ImageNet dataset from Hugging Face, and Shuffle and select a smaller portion for training and validation
 hf_dataset = load_dataset("evanarlian/imagenet_1k_resized_256")
 train_ds = hf_dataset["train"].shuffle(seed=42).select(range(int(0.2 * len(hf_dataset["train"]))))
 val_ds = hf_dataset["val"].shuffle(seed=42).select(range(int(0.2 * len(hf_dataset["val"]))))
 
+# Generator function to load and preprocess images
 def tf_generator(dataset):
     def generator():
         for example in dataset:
@@ -34,6 +37,7 @@ def tf_generator(dataset):
             yield image.astype(np.float32), example["label"]
     return generator
 
+# Convert datasets to tf.data.Dataset pipeline for performance
 train_tf_dataset = tf.data.Dataset.from_generator(
     tf_generator(train_ds),
     output_signature=(
@@ -50,28 +54,34 @@ val_tf_dataset = tf.data.Dataset.from_generator(
     )
 ).batch(batch_size).prefetch(tf.data.AUTOTUNE)
 
-# 5. Bygg ResNet50-modell med ny topp
+# Build the model using pretrained ResNet50 as feature extractor
 base_model = ResNet50(include_top=False, weights='imagenet', input_shape=input_shape)
 base_model.trainable = True  # Freezer feature extractor
 
+# Add custom classification head on top of ResNet50
 x = layers.GlobalAveragePooling2D()(base_model.output)
 x = layers.Dense(512, activation='relu')(x)
 x = layers.Dropout(0.3)(x)
 outputs = layers.Dense(num_classes, activation='softmax')(x)
 
+# Final Model
 model = models.Model(inputs=base_model.input, outputs=outputs)
 
+# Add EarlyStopping to prevent overfitting
 early_stop = EarlyStopping(
     monitor='val_loss',
     patience=3,
     restore_best_weights=True
 )
 
+# Compile the model with Adam optimizer and appropriate loss
 model.compile(
     optimizer=tf.keras.optimizers.Adam(learning_rate=1e-5),
     loss='sparse_categorical_crossentropy',
     metrics=['accuracy']
 )
+
+# Train the model
 history = model.fit(
     train_tf_dataset.repeat(),
     validation_data=val_tf_dataset.repeat(),
@@ -82,7 +92,7 @@ history = model.fit(
 )
 import matplotlib.pyplot as plt
 
-# Accuracy plot
+# Plot Accuracy
 plt.figure(figsize=(10, 5))
 plt.plot(history.history['accuracy'], label='Train Accuracy')
 plt.plot(history.history['val_accuracy'], label='Val Accuracy')
