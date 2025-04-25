@@ -30,7 +30,7 @@ How to Train
 
 3. **Open and run the notebook:**
    - `model_training.ipynb` (use Google Colab or Jupyter)
-#The Result
+# The Result
 
 ![modell loss](https://github.com/user-attachments/assets/fb1e4f44-b89e-4730-8f56-f5fbfc364914)
 ![model accuracy](https://github.com/user-attachments/assets/c7fb11ec-300f-4c0c-bf84-abf2df4404df)
