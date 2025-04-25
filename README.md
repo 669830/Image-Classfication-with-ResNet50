@@ -19,8 +19,8 @@ How to Train
 
 1. **Clone the repo:**
    ```bash
-   git clone https://github.com/your-username/resnet50-imagenet.git
-   cd resnet50-imagenet
+   git clone https://github.com/your-username/Image-Classfication-with-ResNet50.git
+   cd Image-Classfication-with-ResNet50
    ```
 
 2. **Install requirements:**
@@ -29,7 +29,7 @@ How to Train
    ```
 
 3. **Open and run the notebook:**
-   - `model_training.ipynb` (use Google Colab or Jupyter)
+   - `python Image-Classification-ResNet50.py` (use Google Colab or Jupyter)
 # The Result
 
 ![modell loss](https://github.com/user-attachments/assets/fb1e4f44-b89e-4730-8f56-f5fbfc364914)
